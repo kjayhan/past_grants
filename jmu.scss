@@ -1,0 +1,173 @@
+/*-- scss:defaults --*/
+
+$theme: "ath" !default;
+
+//
+// Color system
+//
+
+/* https://www.jmu.edu/identity/our-style/color.shtml */
+
+$purple: #450084 !default;
+$purple-med: #B599CE !default;
+$purple-light: #DACCE6 !default;
+$gold: #CBB677 !default;
+$gold-dark: #AD9C65 !default;
+$gold-light: #F4EFE1 !default;
+$gray: #333333 !default;
+$gray-dark: #595959 !default;
+$gray-medium: #B2B2B2 !default;
+$gray-light: #D6D6D6 !default;
+$green-dark: #5F791C !default;
+$green-medium: #ADCC23 !default;
+$green-light: #DEEBA7 !default;
+$blue-dark: #3C738B !default;
+$blue-medium: #5498B6 !default;
+$blue-light: #D2EBF5 !default;
+$red: #A4232B !default;
+$black: #000000 !default;
+
+
+
+$primary:   $purple !default;
+$secondary: $gold !default;
+$success:   $blue-dark !default;
+$info:      $blue-medium !default;
+$warning:   $gold-dark !default;
+$danger:    $red !default;
+$light:     $gray-light !default;
+$dark:      $gray-dark !default;
+
+
+// $min-contrast-ratio: 2.6 !default;
+
+// Fonts
+
+
+$font-family-sans-serif: "Libre Franklin" !default;
+
+$headings-font-family: "Jost" !default;
+$headings-font-weight: 600 !default;
+
+$navbar-font-family: "Jost" !default;
+$toc-font-family: "Jost" !default;
+$footer-font-family: "Jost" !default;
+
+// $font-size-base: 1.1rem !default; // Assumes the browser default, typically `16px`
+// $font-size-sm: $font-size-base * .875 !default;
+
+
+// Heading color
+$headings-color: $purple !default;
+
+// Body
+$body-color: $gray-dark !default;
+
+// Links
+$link-color: $purple !default;
+$link-decoration: none !default;
+$link-hover-color: $gold !default;
+$link-hover-decoration: underline !default;
+
+// Inline code
+$code-bg: $gray-light !default;
+$code-color: $gray-dark !default;
+
+// Code copy
+$btn-code-copy-color-active: $red !default;
+
+// TOC
+$toc-color: $purple-med;
+$toc-font-size: 1em;
+
+// Navbar
+$navbar-bg: $blue-dark !default;
+$navbar-fg: $gray !default;
+$navbar-hl: $gold-light !default;
+
+// Footer
+$footer-bg: $gray-dark !default;
+$footer-fg: $gray-light !default;
+
+/*-- scss:rules --*/
+
+$web-font-path: "https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" !default;
+
+@if $web-font-path {
+    @import url($web-font-path);
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+}
+
+.rtl {
+    direction: rtl;
+}
+
+
+.home {
+    .quarto-title-banner {
+        margin-bottom: 0;
+    }
+}
+
+#title-block-header {
+    &.home {
+        margin-block-end: 0.5rem;
+    }
+}
+
+.home {
+    .quarto-title-banner {
+        margin-bottom: 0;
+    }
+
+    #title-block-header {
+        margin-block-end: 0;
+    }
+}
+
+// Shrink blocks of code
+pre.text, pre.sourceCode, .cell-output pre {
+    font-size: 0.775em;
+}
+
+.navbar {
+    font-family: $navbar-font-family;
+}
+
+// Put all the icons in a single row in the hamburger menu
+.navbar-nav.navbar-nav-scroll.ms-auto {
+    flex-direction: row;
+}
+
+#TOC {
+    font-family: $toc-font-family;
+    padding-bottom: 0.1em;
+    font-weight: 300;
+
+    .active {
+        font-weight: 400;
+    }
+
+    #toc-title {
+        font-weight: 600;
+    }
+}
+
+.sidebar nav[role="doc-toc"]>ul li a {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+#title-block-header {
+    .quarto-title-banner {
+        font-family: $headings-font-family;
+        
+        .description {
+            font-size: 1.1em;
+            margin-top: 1em !important;
+        }
+    }
+}
