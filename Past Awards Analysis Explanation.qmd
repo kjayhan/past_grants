@@ -1,12 +1,11 @@
 ---
 title: "Analyzing Past Awards using R"
-subtitle: "A Beginners' Guide with As Little Code-tweaking as Possible"
+subtitle: "A Beginner's Guide with Minimal Code-Tweaking"
 date: today
 author: 
   - name: "[Kadir Jun Ayhan](https://ayhan.phd)"
     degrees: "Ph.D."
     email: ayhankx@jmu.edu
-    phone: "540-568-5428"
     affiliations:
       - name: "JMU REDI Office of Research Development"
 format: 
@@ -27,26 +26,22 @@ embed-resources: true
 
 How can we analyze and present past award data with no to minimal knowledge of R?
 
-Well, that is difficult, especially when you come across problems. But it is not impossible. I will give as gentle an introduction to analyzing past awards in R as I can. 
+That can be challenging, especially when you encounter problems. But it is not impossible. I will provide a beginner-friendly introduction to analyzing past awards in R.
 
-You will be able to rely mostly on the code here, and I will explain what you need to edit. Where stuck, [Github Copilot](https://github.com/features/copilot?ef_id=_k_Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB_k_&OCID=AIDcmmb150vbv1_SEM__k_Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB_k_&gad_source=1&gclid=Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB), which is free for those with university affiliations, or generative AI tools can come to your help. However, you would need to explain your error clearly and step-by-step to get the best results.
+You can rely mostly on the provided code, and I will explain what you need to modify. Where stuck, [Github Copilot](https://github.com/features/copilot?ef_id=_k_Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB_k_&OCID=AIDcmmb150vbv1_SEM__k_Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB_k_&gad_source=1&gclid=Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB), which is free for those with university affiliations, or generative AI tools can come to your help. However, you would need to explain your error clearly and step-by-step to get the best results.
 
 # Installing R and RStudio
 
-First, you need to install R and RStudio. R is the programming language, and RStudio is an integrated development environment (IDE) for R. You can download R from [here](https://cran.r-project.org/), and RStudio from [here](https://www.rstudio.com/products/rstudio/download/).
+First, install R and RStudio. R is the programming language, while RStudio is an integrated development environment (IDE) for R. You can download R from [here](https://cran.r-project.org/), and RStudio from [here](https://www.rstudio.com/products/rstudio/download/).
 
 You can refer to this [video](https://www.youtube.com/watch?v=ulIv0NiVTs4) for a step-by-step guide on how to install R and RStudio.
-
-<!-- # Creating a Project in RStudio -->
-
-<!-- After installing R and RStudio, open RStudio, and click on the “File” menu, then “New Project,” "New Directory," and then “Create Project.”  -->
 
 # Downloading the Repository
 
 
 After installing R and RStudio, open RStudio, and click on the “File” menu, then “New Project,” "Version Control," and then “Git.”
 
-Under the "Repository URL" box, paste the URL of the repository: https://github.com/kjayhan/past_grants.git. Then give this project directory a name, and select a directory folder to save it in, then click "Create Project."
+Under the "Repository URL" box, paste the URL of the repository: [https://github.com/kjayhan/past_grants.git](https://github.com/kjayhan/past_grants.git). Name the project directory, select a folder to save it in, and click 'Create Project.
 
 This repository contains the Quarto document, the R code, sample awards data, and bonus .scss file that you need to analyze past awards.
 
@@ -56,7 +51,7 @@ When you are analyzing your past award data, make sure to put it in the data fol
 
 # Installing Packages
 
-After downloading the repository, you need to install the packages that we will be using. You will do this only once, just like installing an app on your phone. You can do this by running the following code in the R console. If a code in R begins with "#", it is a comment, and it does not run. If you uncomment it by removing the "#", it will run. For the following code, you can uncomment the following lines in the code chunk to install the packages.
+After downloading the repository, you need to install the packages that we will be using. You only need to do this once, similar to installing an app on your phone. You can do this by running the following code in the R console. If a code in R begins with "#", it is a comment, and it does not run. If you uncomment it by removing the "#", it will run. For the following code, you can uncomment the following lines in the code chunk to install the packages.
 
 ```{r}
 # install.packages("tidyverse")
@@ -86,7 +81,7 @@ library(ggeasy) # Easy labeling of ggplot2 graphs
 
 # Loading the Data
 
-Replace the name of the file with the name of your file name.
+Replace 'awards.csv' with the name of your file.
 
 The sample data I use is from [NSF Division of Social and Economic Sciences (SBE/SES)](https://www.nsf.gov/awardsearch/advancedSearchResult?ProgOrganization=04050000).
 
@@ -97,7 +92,7 @@ awards <- read_csv("data/awards.csv", locale = locale(encoding = "Latin1"))
 # Basic Data Cleaning
 
 ::: {.callout-important}
-If the column name for the amount or date are different, replace all instances of "awarded_amount_to_date" with the correct column name for amount, and the same for "last_amendment_date." You can do that by using the find and replace feature by clicking CTRL+F or Command+F.
+If the column names for the amount or date are different, replace all instances of "awarded_amount_to_date" with the correct column name for amount, and the same for "last_amendment_date." You can do that by using the find and replace feature by clicking CTRL+F or Command+F.
 :::
 
 We will begin with cleaning the column names and the data to make them more readable and usable.
@@ -107,9 +102,9 @@ awards <- janitor::clean_names(awards)
 ```
 
 
-The date format is set to "%m/%d/%Y" (e.g., 05/15/2024) in the code below. If the date format in your csv file is different, you can change it accordingly. See this [page](https://www.geeksforgeeks.org/how-to-use-date-formats-in-r/).
+The date format is set to `"%m/%d/%Y"` (e.g., 05/15/2024) in the code below. If the date format in your csv file is different, you can change it accordingly. See this [page](https://www.geeksforgeeks.org/how-to-use-date-formats-in-r/).
 
-For now I will limit this analysis to projects that begin with "Collaborative Research" in their titles, to show you how to filter the data. You can change this to whatever you want.
+For now, I will focus on projects with titles starting with 'Collaborative Research' to demonstrate data filtering.
 
 ::: {.callout-important}
 Remove or uncomment the following line if you don't want to filter anything based on title.
@@ -166,7 +161,7 @@ You can write your introduction here. This section is not code. You can write yo
 
 In this section, I give an analysis of the awarded amounts.
 
-Some awards are collaborative projects. In other words, the same project (with the same title and abstract) has more than one entry, because the amount is divided across different institutions. The following code aggregates the amount for collaborative projects.
+Some awards are collaborative, meaning the same project (with the same title and abstract) may have multiple entries because the funding is divided across institutions. The following code aggregates the amount for collaborative projects.
 
 ```{r}
 awards_g <- awards |>
@@ -208,7 +203,7 @@ density
 
 # Save the plot to a file. You can change the file name and the path to the file.
 
-ggsave("data/density_normal.png", density, dpi = 300)
+ggsave("figures/density_normal.png", density, dpi = 300)
 ```
 
 ## Awarded Amounts Option 2
@@ -239,7 +234,7 @@ density_log
 
 # Save the plot to a file. You can change the file name and the path to the file.
 
-ggsave("data/density_log.png", density_log, dpi = 300)
+ggsave("figures/density_log.png", density_log, dpi = 300)
 
 ```
 
@@ -295,7 +290,7 @@ freq <- ggplot(tdm_df[1:20,], aes(x = reorder(word, freq), y = freq)) + # Plot t
 
 freq
 
-ggsave("data/freq.png", freq, dpi = 300)
+ggsave("figures/freq.png", freq, dpi = 300)
 ```
 
 ## Topic Modeling in Abstracts
@@ -334,7 +329,7 @@ tm <- top_terms |>
 
 tm
 
-ggsave("data/tm.png", tm, dpi = 300)
+ggsave("figures/tm.png", tm, dpi = 300)
 ```
 
 ## Word Networks (Bigrams) in Abstracts
@@ -367,7 +362,7 @@ bigram <- ggraph(bigram_graph, layout = "fr") + # Create a force-directed graph 
 
 bigram
 
-ggsave("data/bigram.png", bigram, dpi = 300)
+ggsave("figures/bigram.png", bigram, dpi = 300)
 ```
 
 # Abstract Takeaways

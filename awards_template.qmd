@@ -63,7 +63,7 @@ awards <- read_csv("data/awards.csv", locale = locale(encoding = "Latin1"))
 
 # Basic Data Cleaning
 
-# If the column name for the amount or date are different, replace all instances of "awarded_amount_to_date" with the correct column name for amount, and the same for "last_amendment_date." You can do that by using the find and replace feature by clicking CTRL+F or Command+F.
+# If the column names for the amount or date are different, replace all instances of "awarded_amount_to_date" with the correct column name for amount, and the same for "last_amendment_date." You can do that by using the find and replace feature by clicking CTRL+F or Command+F.
 # 
 # The date format is set to "%m/%d/%Y" (e.g., 05/15/2024) in the code below. If your date format in the csv file is different, you can change it accordingly. See this [page](https://www.geeksforgeeks.org/how-to-use-date-formats-in-r/).
 
@@ -73,7 +73,7 @@ awards <- janitor::clean_names(awards)
 # Making sure the data types are correct.
 # If the column name for the amount is different, replace all instances of "awarded_amount_to_date" with the correct column name for amount. You can do that by using the find and replace feature by clicking CTRL+F or Command+F.
 
-# For now let's limit ourselves to projects that begin with "Collaborative Research" in their titles. Remove or uncomment this line if you don't want to filter anything based on title.
+# For now, I will focus on projects with titles starting with 'Collaborative Research' to demonstrate data filtering. Remove or uncomment this line if you don't want to filter anything based on title.
 
 # If you indeed want to filter based on title, you can change the title to whatever you want. You can also use regex to filter based on a pattern. For example, if you want to filter for titles that contain "Collaborative Research" OR "Collaborative" OR "Research," you can use str_detect(title, "Collaborative|Research") instead. For more on regex, see this page: https://r4ds.hadley.nz/regexps.html.
 
@@ -110,7 +110,7 @@ You can write your introduction here. This section is not code. You can write yo
 
 ```{r}
 
-# Some awards are collaborative projects. This code aggregates the amount for collaborative projects.
+# Some awards are collaborative, meaning the same project (with the same title and abstract) may have multiple entries because the funding is divided across institutions. This code aggregates the amount for collaborative projects.
 
 awards_g <- awards |>
   group_by(title) |>
@@ -147,7 +147,7 @@ density
 
 # Save the plot to a file. You can change the file name and the path to the file.
 
-ggsave("data/density_normal.png", density, dpi = 300)
+ggsave("figures/density_normal.png", density, dpi = 300)
 ```
 
 # Awarded Amounts Option 2
@@ -178,7 +178,7 @@ density_log
 
 # Save the plot to a file. You can change the file name and the path to the file.
 
-ggsave("data/density_log.png", density_log, dpi = 300)
+ggsave("figures/density_log.png", density_log, dpi = 300)
 
 ```
 
@@ -222,7 +222,7 @@ freq <- ggplot(tdm_df[1:20,], aes(x = reorder(word, freq), y = freq)) + # Plot t
 
 freq
 
-ggsave("data/freq.png", freq, dpi = 300)
+ggsave("figures/freq.png", freq, dpi = 300)
 ```
 
 ## Topic Modeling in Abstracts
@@ -261,7 +261,7 @@ tm <- top_terms |>
 
 tm
 
-ggsave("data/tm.png", tm, dpi = 300)
+ggsave("figures/tm.png", tm, dpi = 300)
 ```
 
 ## Word Networks (Bigrams) in Abstracts
@@ -291,7 +291,7 @@ bigram <- ggraph(bigram_graph, layout = "fr") + # Create a force-directed graph 
 
 bigram
 
-ggsave("data/bigram.png", bigram, dpi = 300)
+ggsave("figures/bigram.png", bigram, dpi = 300)
 ```
 
 # Abstract Takeaways
