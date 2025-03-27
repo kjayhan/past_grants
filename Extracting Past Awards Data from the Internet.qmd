@@ -1,0 +1,179 @@
+---
+title: "Extracting Past Awarded Grants Data from the Internet"
+subtitle: "The Case of William T. Grant Foundation's Past Awarded Grants"
+date: today
+author: 
+  - name: "[Kadir Jun Ayhan](https://ayhan.phd)"
+    degrees: "Ph.D."
+    email: ayhankx@jmu.edu
+    affiliations:
+      - name: "JMU REDI Office of Research Development"
+format: 
+  html:
+    theme: jmu.scss
+    title-block-banner: "#450084"
+    title-block-banner-color: "#CBB677"
+    toc: true
+    code-fold: true
+    code-summary: "Show the code"
+editor: source
+warning: false
+#echo: false
+embed-resources: true
+# execute:
+#   eval: false
+---
+
+# Introduction
+
+NSF publishes its past awards data in a structured format that you can download and analyze. However, other funding agencies or foundations may not provide such data. Here, I will show you how to extract past awards data from the internet using the William T. Grant Foundation's past awards as an example.
+
+Unfortunately, the code here won't work --as it is-- on any other website since all websites have different structures. However, you can use the code and explanation here to get a sense of what you need to do to extract data from other websites.
+
+You can always get more customized support from [Github Copilot](https://github.com/features/copilot?ef_id=_k_Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB_k_&OCID=AIDcmmb150vbv1_SEM__k_Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB_k_&gad_source=1&gclid=Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB), which is free for those with university affiliations, or other generative AI tools. However, you would need ask what you need and the errors you come across step-by-step to get the best results.
+
+# Extracting Past Awarded Grants Data from the Internet
+
+Let's start by loading the necessary libraries. If you don't have these libraries installed, you can install them using the `install.packages()` function. You can uncomment the `install.packages()` lines below to install the libraries.
+
+```{r}
+# install.packages("rvest")
+# install.packages("tidyverse")
+# install.packages("furrr")
+# install.packages("gt")
+library(rvest)
+library(tidyverse)
+library(furrr)
+```
+
+Our base url in this example is [William T. Grant Foundation's Awarded Research Grants Library](https://wtgrantfoundation.org/the-library/?search=&format=grants&area=reducing-inequality&program=research-grants&order=date-desc&paging=)
+
+```{r}
+base_url <- "https://wtgrantfoundation.org/the-library/?search=&format=grants&area=reducing-inequality&program=research-grants&order=date-desc&paging="
+```
+
+As of `r Sys.Date()`, there are 23 pages of past awards data, totaling 441 awards. We will extract all of them.
+
+There are multiple challenges with extracting the data from William T. Grant Foundation's website. Most importantly, you need to click on each award to get the details. This means that you need to extract the URLs of each award first and then extract the details from each URL.
+
+We will initialize an empty vector to store all URLs.
+
+```{r}
+all_urls <- c()
+```
+
+We will loop through all pages and extract individual URLs. Since we cannot extract 441 URLs manually, we need to find a pattern in the URLs, and put it in a loop.
+
+
+To get the URLs, you need to inspect the page and find the XPath of the elements that contain the URLs. You can do this by right-clicking on the element that you are interested in and selecting "Inspect" in Chrome. Then, right-click on the element in the "Elements" tab and select "Copy" > "Copy XPath".
+
+By doing this, I find that the XPath of the URLs, that is the hyperlinked awarded grant title, is `//*[@id="library-content"]/div/article/div[2]/ul/li/div/div/a`.
+
+I put this information into my loop to extract all URLs.
+
+```{r}
+
+# Loop through all pages and extract URLs
+for (i in 1:23) {
+  page_url <- paste0(base_url, i)
+  page <- read_html(page_url)
+  
+  # Extract all similar URLs on the page
+  page_urls <- page %>% html_nodes(xpath = '//*[@id="library-content"]/div/article/div[2]/ul/li/div/div/a') %>% html_attr("href")
+  
+  # Append the extracted URLs to the all_urls vector
+  all_urls <- c(all_urls, page_urls)
+}
+```
+
+Now, we have all URLs in the `all_urls` vector. We can use this vector to extract the details of each award.
+
+Here, we also need to find patterns in the details of each awarded grant. We need to inspect the page and find the XPath of the elements that contain the details. You can do this by right-clicking on the element that you are interested in and selecting "Inspect" in Chrome. Then, right-click on the element in the "Elements" tab and select "Copy" > "Copy XPath".
+
+Here, we are interested in the title, amount, area, short description, and description of each awarded grant. I find that the XPath of these elements are as follows:
+
+- Title: `/html/body/div[4]/div/div[1]/div/div/div/div/h1`
+
+- Amount: `/html/body/div[4]/div/div[2]/div/div[2]/div/div[5]/div`
+
+- Area: `/html/body/div[4]/div/div[2]/div/div[2]/div/div[4]/a`
+
+- Short Description: `//*[@id='swup']/div[2]/div/div[1]/div/div[1]/p`
+
+- Description: `/html/body/div[4]/div/div[2]/div/div[1]/div/div[2]`
+
+We will create a function to extract the details of each award from a single URL.
+
+```{r}
+# Function to extract grant information from a single URL
+extract_grant_info <- function(page_url) {
+  page <- read_html(page_url)
+  
+  title <- page %>% html_node(xpath = "/html/body/div[4]/div/div[1]/div/div/div/div/h1") %>% html_text(trim = TRUE)
+  amount <- page %>% html_node(xpath = "/html/body/div[4]/div/div[2]/div/div[2]/div/div[5]/div") %>% html_text(trim = TRUE)
+  if (is.na(amount) || amount == "") {
+    amount <- page %>% html_node(xpath = "/html/body/div[4]/div/div[2]/div/div[2]/div/div[6]/div") %>% html_text(trim = TRUE)
+  }
+  if (is.na(amount) || amount == "") {
+    amount <- page %>% html_node(xpath = "/html/body/div[4]/div/div[2]/div/div[2]/div/div[7]/div") %>% html_text(trim = TRUE)
+  }
+  area <- page %>% html_node(xpath = "/html/body/div[4]/div/div[2]/div/div[2]/div/div[4]/a") %>% html_text(trim = TRUE)
+  desc_short <- page %>% html_node(xpath = "//*[@id='swup']/div[2]/div/div[1]/div/div[1]/p") %>% html_text(trim = TRUE)
+  desc <- page %>% html_node(xpath = "/html/body/div[4]/div/div[2]/div/div[1]/div/div[2]") %>% html_text(trim = TRUE)
+  
+  data.frame(
+    title = title,
+    amount = amount,
+    area = area,
+    desc_short = desc_short,
+    desc = desc,
+    stringsAsFactors = FALSE
+  )
+}
+
+```
+
+Extracting detailed information about 441 awards from 441 different urls will take a long time. We can use parallel processing to speed up the process. We will use the `furrr` package for parallel processing.
+
+```{r}
+# Set up parallel processing
+plan(multisession)
+```
+
+We will use the `future_map_dfr` function from the `furrr` package to extract the grant information from all URLs in parallel. We will run our custom-defined function `extract_grant_info` on all URLs in parallel.
+
+```{r}
+# Extract grant information in parallel
+all_grants <- future_map_dfr(all_urls, extract_grant_info)
+```
+
+Now, we have extracted the details of all 441 awarded grants. We will now make sure that the amount column is numeric by parsing the number from the amount column.
+
+```{r}
+# parse number from amount
+
+all_grants$amount <- parse_number(all_grants$amount)
+
+```
+
+Let's take a look at the first few rows of the extracted data.
+
+```{r}
+gt::gt(head(all_grants))
+```
+
+Voila! There we have it. We have successfully extracted the past awarded grants data from the William T. Grant Foundation's website.
+
+# Saving the Data
+
+We can save the extracted data to a CSV file for further analysis.
+
+```{r}
+# Save the data to a CSV file
+write_csv(all_grants, "data/wt_grant_awards.csv")
+```
+
+You can refer to [this guide](https://github.com/kjayhan/past_grants/blob/main/Past%20Awards%20Analysis%20Explanation.html) for further analysis, visualization, or reporting.
+
+If you have any questions or need help, feel free to reach out to [me](mailto:ayhankx@jmu.edu) (after you consult with your AI assistant(s) first!).
+
