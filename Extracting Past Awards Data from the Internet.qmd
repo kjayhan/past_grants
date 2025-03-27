@@ -96,6 +96,12 @@ Here, we are interested in the title, amount, area, short description, and descr
 
 - Amount: `/html/body/div[4]/div/div[2]/div/div[2]/div/div[5]/div`
 
+:::{.callout-important}
+I found out that there were NAs when I first ran the code based on these xpaths. I realized that the amount is not always in the same place. Sometimes it is in `/html/body/div[4]/div/div[2]/div/div[2]/div/div[6]/div` and sometimes in `/html/body/div[4]/div/div[2]/div/div[2]/div/div[7]/div`.
+
+So, the code below is updated to check if the amount is NA or empty, and if so, it will try the other xpaths.
+:::
+
 - Area: `/html/body/div[4]/div/div[2]/div/div[2]/div/div[4]/a`
 
 - Short Description: `//*[@id='swup']/div[2]/div/div[1]/div/div[1]/p`
@@ -170,7 +176,7 @@ We can save the extracted data to a CSV file for further analysis.
 
 ```{r}
 # Save the data to a CSV file
-write_csv(all_grants, "data/wt_grant_awards.csv")
+write_csv(all_grants, "data/wtgrant_past_awards.csv")
 ```
 
 You can refer to [this guide](https://github.com/kjayhan/past_grants/blob/main/Past%20Awards%20Analysis%20Explanation.html) for further analysis, visualization, or reporting.
