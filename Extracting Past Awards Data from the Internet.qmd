@@ -46,10 +46,10 @@ library(tidyverse)
 library(furrr)
 ```
 
-Our base url in this example is [William T. Grant Foundation's Awarded Research Grants Library](https://wtgrantfoundation.org/the-library/?search=&format=grants&area=reducing-inequality&program=research-grants&order=date-desc&paging=)
+Our base url in this example is [William T. Grant Foundation's Awarded Research Grants Library](https://wtgrantfoundation.org/the-library/?search=&format=grants&program=research-grants&order=date-desc&paging=)
 
 ```{r}
-base_url <- "https://wtgrantfoundation.org/the-library/?search=&format=grants&area=reducing-inequality&program=research-grants&order=date-desc&paging="
+base_url <- "https://wtgrantfoundation.org/the-library/?search=&format=grants&program=research-grants&order=date-desc&paging="
 ```
 
 As of `r Sys.Date()`, there are 23 pages of past awards data, totaling 441 awards. We will extract all of them.
@@ -169,6 +169,40 @@ gt::gt(head(all_grants))
 ```
 
 Voila! There we have it. We have successfully extracted the past awarded grants data from the William T. Grant Foundation's website.
+
+# Checking the Data for Duplicates
+
+Let's check the dimensions of the data.
+
+```{r}
+# Check the dimensions of the data
+dim(all_grants)
+```
+
+We have `r nrow(all_grants)` rows and `r ncol(all_grants)` columns. `r nrow(all_grants)` is the number of awarded grants. `r ncol(all_grants)` is the number of columns we extracted.
+
+We can check the data for duplicates by using the `duplicated()` function. This function will return a logical vector indicating which rows are duplicates.
+
+```{r}
+# Check how many are duplicate entries
+
+sum(duplicated(all_grants))
+```
+
+We do not have any duplicates in the data. However, if we had duplicates, we could remove them by using the `unique()` function.
+
+```{r}
+all_grants <- unique(all_grants)
+```
+
+Let's check the dimensions of the data again.
+
+```{r}
+# Check the dimensions of the data again
+dim(all_grants)
+```
+
+We still have `r nrow(all_grants)` rows and `r ncol(all_grants)` columns. 
 
 # Saving the Data
 
