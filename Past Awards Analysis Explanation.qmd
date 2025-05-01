@@ -28,30 +28,51 @@ How can we analyze and present past award data with no to minimal knowledge of R
 
 That can be challenging, especially when you encounter problems. But it is not impossible. I will provide a beginner-friendly introduction to analyzing past awards in R.
 
-You can rely mostly on the provided code, and I will explain what you need to modify. Where stuck, [Github Copilot](https://github.com/features/copilot?ef_id=_k_Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB_k_&OCID=AIDcmmb150vbv1_SEM__k_Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB_k_&gad_source=1&gclid=Cj0KCQjw-e6-BhDmARIsAOxxlxVxyN332dFv-fFavTDPVbo2foO0-PAD81Ksh-tXmALeAgfx2pdocJIaAm25EALw_wcB), which is free for those with university affiliations, or generative AI tools can come to your help. However, you would need to explain your error clearly and step-by-step to get the best results.
+You can rely mostly on the provided code, and I will explain what you need to modify. Where stuck, [Github Copilot](https://github.com/features/copilot), which is free for those with university affiliations, or other generative AI tools can come to your help. However, you would need to explain your error clearly and step-by-step to get the best results.
 
 # Installing R and RStudio
 
 First, install R and RStudio. R is the programming language, while RStudio is an integrated development environment (IDE) for R. You can download R from [here](https://cran.r-project.org/), and RStudio from [here](https://www.rstudio.com/products/rstudio/download/).
 
-You can refer to this [video](https://www.youtube.com/watch?v=ulIv0NiVTs4) for a step-by-step guide on how to install R and RStudio.
+You can refer to the following [video](https://www.youtube.com/watch?v=ulIv0NiVTs4) for a step-by-step guide on how to install R and RStudio.
+
+{{< video https://www.youtube.com/watch?v=ulIv0NiVTs4 >}}
+
+:::{.callout-note}
+This is not a guide to teach you R. If you are interested in learning R, I recommend the following resources:
+
+[R for Data Science](https://r4ds.had.co.nz/){target="_blank"}
+
+[Hands-on Data Visualization](https://handsondataviz.org/){target="_blank"}
+
+[Data Visualization - Andrew Heiss](https://datavizs23.classes.andrewheiss.com/){target="_blank"}
+
+Course: [Harvard on Edx - Data Science: R Basics](https://www.edx.org/course/data-science-r-basics){target="_blank"}
+
+JMU Course for JMU staff/ students: [Introduction to R](https://www.jmu.edu/cfi/scholarship/resources/developing-your-skills.shtml#qskills1)
+
+Hands-on-practice: [Datacamp](https://www.datacamp.com){target="_blank"}
+
+For more free R books, see [Dr. Mine Dogucu's website](https://www.learnr4free.com/en/index.html){target="_blank"}.
+:::
 
 # Downloading the Repository
 
-
 After installing R and RStudio, open RStudio, and click on the “File” menu, then “New Project,” "Version Control," and then “Git.”
 
-Under the "Repository URL" box, paste the URL of the repository: [https://github.com/kjayhan/past_grants.git](https://github.com/kjayhan/past_grants.git). Name the project directory, select a folder to save it in, and click 'Create Project.
+Under the "Repository URL" box, paste the URL of the repository: <https://github.com/kjayhan/past_grants.git>. Name the project directory, select a folder to save it in, and click 'Create Project'.
 
-This repository contains the Quarto document, the R code, sample awards data, and bonus .scss file that you need to analyze past awards.
+This repository contains the Quarto document, the R code, and sample awards data files that you need to analyze past awards. There is also a bonus jmu.scss file that you can use to customize the look of your Quarto document. You can also use this theme I created for JMU branding if you want.
 
-::: {.callout-important}
-When you are analyzing your past award data, make sure to put it in the data folder as a ".csv" file within the same directory folder you just created by downloading my repository.
+Open the "awards_template.qmd" file in RStudio. This is the template you will use to analyze past awards data. Save it as "NSF X awards.qmd" or whatever you want to name it within the same directory you created by downloading my repository.
+
+:::{.callout-important}
+When analyzing your past award data, ensure you place it in the data folder as a ".csv" file within the same directory you created by downloading my repository. For NSF past awards, click "Browse Projects Funded by This Program" under any NSF program, then click "CSV" to download the data.
 :::
 
 # Installing Packages
 
-After downloading the repository, you need to install the packages that we will be using. You only need to do this once, similar to installing an app on your phone. You can do this by running the following code in the R console. If a code in R begins with "#", it is a comment, and it does not run. If you uncomment it by removing the "#", it will run. For the following code, you can uncomment the following lines in the code chunk to install the packages.
+After downloading the repository, you need to install the packages that we will be using. You only need to do this once, similar to installing an app on your phone. You can do this by running the following code in the R console. If a code in R begins with "\#", it is a comment, and it does not run. If you uncomment it by removing the "\#", it will run. For the following code, you can uncomment the following lines in the code chunk to install the packages.
 
 ```{r}
 # install.packages("tidyverse")
@@ -81,36 +102,33 @@ library(ggeasy) # Easy labeling of ggplot2 graphs
 
 # Loading the Data
 
-Replace 'awards.csv' with the name of your file.
+If different, replace 'awards.csv' with the name of your file.
 
 The sample data I use is from [NSF Division of Social and Economic Sciences (SBE/SES)](https://www.nsf.gov/awardsearch/advancedSearchResult?ProgOrganization=04050000).
 
 ```{r}
-awards <- read_csv("data/awards.csv", locale = locale(encoding = "Latin1"))
+awards <- read_csv("data/awards.csv", locale = locale(encoding = "Latin1")) # Read the csv file and assign it to the variable 'awards'
 ```
 
 # Basic Data Cleaning
 
-::: {.callout-important}
+:::{.callout-important}
 If the column names for the amount or date are different, replace all instances of "awarded_amount_to_date" with the correct column name for amount, and the same for "last_amendment_date." You can do that by using the find and replace feature by clicking CTRL+F or Command+F.
 :::
 
 We will begin with cleaning the column names and the data to make them more readable and usable.
 
 ```{r}
-awards <- janitor::clean_names(awards)
+awards <- janitor::clean_names(awards) # Clean the column names to make them more readable
 ```
-
-
-The date format is set to `"%m/%d/%Y"` (e.g., 05/15/2024) in the code below. If the date format in your csv file is different, you can change it accordingly. See this [page](https://www.geeksforgeeks.org/how-to-use-date-formats-in-r/).
 
 For now, I will focus on projects with titles starting with 'Collaborative Research' to demonstrate data filtering.
 
-::: {.callout-important}
+If you want to filter based on title, you can change the title to whatever you want. You can also use regex to filter based on a pattern. For example, if you want to filter for titles that contain "Collaborative Research" OR "Collaborative" OR "Research," you can use `str_detect(title, "Collaborative|Research")` instead. For more on regex, see this [page](https://r4ds.hadley.nz/regexps.html).
+
+:::{.callout-important}
 Remove or uncomment the following line if you don't want to filter anything based on title.
 :::
-
-If you want to filter based on title, you can change the title to whatever you want. You can also use regex to filter based on a pattern. For example, if you want to filter for titles that contain "Collaborative Research" OR "Collaborative" OR "Research," you can use `str_detect(title, "Collaborative|Research")` instead. For more on regex, see this [page](https://r4ds.hadley.nz/regexps.html).
 
 ```{r}
 awards <- awards |>
@@ -119,16 +137,15 @@ awards <- awards |>
 
 Now, we make sure that the amount is numeric and the date is in the correct format.
 
-::: {.callout-important}
-If the amount is already numeric, comment the following line.
+:::{.callout-important}
+If the amount is already numeric, comment the following line by adding "\#" at the beginning of the line.
 :::
 
 ```{r}
 awards$awarded_amount_to_date <- parse_number(awards$awarded_amount_to_date)
 ```
 
-
-The date format is set to "%m/%d/%Y" (e.g., 05/15/2024) in the code below. If your date format in the csv file is different, you can change it accordingly. See this [page](https://www.geeksforgeeks.org/how-to-use-date-formats-in-r/).
+The date format is set to `"%m/%d/%Y"` (e.g., 05/15/2024) in the code below. If the date format in your csv file is different, you can change it accordingly. See this [page](https://www.geeksforgeeks.org/how-to-use-date-formats-in-r/) for more information on date formats.
 
 ```{r}
 awards$last_amendment_date <- parse_date(awards$last_amendment_date, format = "%m/%d/%Y")
@@ -141,21 +158,23 @@ awards <- awards |>
   filter(year(last_amendment_date) > 2016)
 ```
 
-We will now replace HTML tags from the abstract column to keep only the text. I would also like to remove the following sentence, because it conflates text analysis, as it is in the end of every abstract: "This award reflects NSF's statutory mission and has been deemed worthy of support through evaluation using the Foundation's intellectual merit and broader impacts review criteria."
+We will now replace HTML tags from the abstract column to keep only the text. I would also like to remove the following sentence, because it conflates text analysis, as it is in the end of every abstract funded by NSF: "This award reflects NSF's statutory mission and has been deemed worthy of support through evaluation using the Foundation's intellectual merit and broader impacts review criteria."
 
 ```{r}
-awards$abstract <- gsub("</>|<br/>|\r\r|\r \r|This award reflects NSF's statutory mission and has been deemed worthy of support through evaluation using the Foundation's intellectual merit and broader impacts review criteria.", " ", awards$abstract)
+awards$abstract <- gsub("</>|<br/>|\r\r|\r \r|This award reflects NSF's statutory mission and has been deemed worthy of support through evaluation using the Foundation's intellectual merit and broader impacts review criteria.", " ", awards$abstract) # Remove HTML tags and the sentence
 ```
 
 # Scripting in Quarto
 
 You can learn more about Quarto [here](https://quarto.org/docs/get-started/).
 
-You can write in Quarto using RStudio. You can write in plain text, and it will be converted to HTML or PDF. Headings begin with "#", and subheadings with "##", "###" depending on what level of subheading you want.
+You can write in Quarto using RStudio. You can write in plain text, and it can be rendered into HTML or PDF. Headings begin with "#", and subheadings with "##", "###" depending on what level of subheading you want.
 
 # Introduction
 
 You can write your introduction here. This section is not code. You can write your introduction in plain text.
+
+You can add R code chunks by clicking on the green "+C" button in the top right corner of RStudio, and then selecting "R." You can also use the keyboard shortcut CTRL+ALT+I or Command+Option+I to insert a code chunk.
 
 # Awarded Amounts
 
@@ -172,7 +191,7 @@ awards_g <- awards |>
 ```
 
 :::{.callout-important}
-I give you two options for a summary of the awarded amounts in the template Make sure to remove one of them.
+I give you two options for a summary of the awarded amounts in the template. Make sure to remove one of them.
 :::
 
 ## Awarded Amounts Option 1
@@ -182,22 +201,26 @@ If the awarded amount range is "normal," you can use the following code. Otherwi
 This code creates a density plot of the awarded amounts. You can change the color of the lines by changing the hex color codes. You can also change the x and y axis labels by changing the text in the labs function.
 
 ```{r}
+
 density <- awards_g |>
-  ggplot(aes(round(amount/1e3))) +
+  ggplot(aes(round(amount/1000))) + #dividing by 1000
   geom_density() +
-  geom_vline(xintercept = median(round(awards_g$amount/1e3)), color = "#450084") +
-  geom_vline(xintercept = mean(round(awards_g$amount/1e3)), color = "#CBB677") +
-  geom_text(aes(x = median(round(amount/1e3)), y = Inf, label = "Median"), color = "#450084", vjust=1,hjust=2.1,size=3,angle=90) +
-  geom_text(aes(x = mean(round(amount/1e3)), y = Inf, label = "Mean"), color = "#CBB677", vjust=1,hjust=2.1,size=3,angle=90) +
-  scale_x_continuous(breaks = c(seq(0, max(round(awards_g$amount/1e3)), by = 1000), max(round(awards_g$amount/1e3)))) +
+  geom_vline(xintercept = median(round(awards_g$amount/1000)), color = "#450084") +
+  geom_vline(xintercept = mean(round(awards_g$amount/1000)), color = "#450084") +
+  geom_text(aes(x = median(round(amount/1000)), y = Inf, label = "Median"), color = "#450084", vjust=1,hjust=2.1,size=5,angle=90) +
+  geom_text(aes(x = mean(round(amount/1000)), y = Inf, label = "Mean"), color = "#450084", vjust=1,hjust=2.1,size=5,angle=90) +
+  scale_x_continuous(breaks = c(seq(0, max(round(awards_g$amount/1000)), by = 1000))) +
   #coord_flip() +
   labs(x = "Awarded Amounts (in $1000)",
        y = "Density") +
-  theme_bw() +
+  theme_void() +
   theme(legend.position="none",
+        element_text(color = '#A4232B'),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
-        axis.text.x = element_text(angle = 90, hjust = 1))
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.title.x = element_text(colour = "#A4232B"),
+  panel.background = element_rect(fill = "#F4EFE1"))
 
 density
 
@@ -213,21 +236,24 @@ If your code is skewed, as in this example, you can use the following code which
 ```{r}
 
 density_log <- awards_g |>
-  ggplot(aes(round(amount/1e3))) +
+  ggplot(aes(round(amount/1000))) +
   geom_density() +
   scale_x_continuous(trans='log2', 
-                     breaks = c(2^seq(0, ceiling(log2(max(round(awards_g$amount/1e3))))), round(mean(round(awards_g$amount/1e3)),0), round(median(round(awards_g$amount/1e3)),0))) +
-  geom_vline(xintercept = median(round(awards_g$amount/1e3)), color = "#450084") +
-  geom_vline(xintercept = mean(round(awards_g$amount/1e3)), color = "#CBB677") +
-  geom_text(aes(x = median(round(amount/1e3)), y = Inf, label = "Median"), color = "#450084", vjust=1,hjust=2.1,size=3,angle=90) +
-  geom_text(aes(x = mean(round(amount/1e3)), y = Inf, label = "Mean"), color = "#CBB677", vjust=1,hjust=2.1,size=3,angle=90) +
+                     breaks = c(2^seq(0, ceiling(log2(max(round(awards_g$amount/1000))))), round(mean(round(awards_g$amount/1000)),0), round(median(round(awards_g$amount/1000)),0))) +
+  geom_vline(xintercept = median(round(awards_g$amount/1000)), color = "#450084") +
+  geom_vline(xintercept = mean(round(awards_g$amount/1000)), color = "#450084") +
+  geom_text(aes(x = median(round(amount/1000)), y = Inf, label = "Median"), color = "#450084", vjust=1,hjust=2.1,size=5,angle=90) +
+  geom_text(aes(x = mean(round(amount/1000)), y = Inf, label = "Mean"), color = "#450084", vjust=1,hjust=2.1,size=5,angle=90) +
   labs(x = "Awarded Amounts in $1000 (log transformed)",
        y = "Density") +
-  theme_bw() +
+  theme_void() +
   theme(legend.position="none",
+        element_text(color = '#A4232B'),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
-        axis.text.x = element_text(angle = 90, hjust = 1))
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.title.x = element_text(colour = "#A4232B"),
+  panel.background = element_rect(fill = "#F4EFE1"))
 
 
 density_log
@@ -235,13 +261,11 @@ density_log
 # Save the plot to a file. You can change the file name and the path to the file.
 
 ggsave("figures/density_log.png", density_log, dpi = 300)
-
 ```
 
-This is text and inline code. Feel free to change regular text. If you want to change the inline code, which begins with "\`r", followed by R code and ends with "\`." 
+This is text and inline code. Feel free to change regular text. The part which begins with "\`r", followed by R code and ends with "\`" is called inline code. It runs the R code and replaces it with the result. For example, the following code will replace it with the mean and median of the awarded amounts.
 
 The average of filtered [NSF Division of Social and Economic Sciences (SBE/SES)](https://www.nsf.gov/awardsearch/simpleSearchResult?queryText=diplomacy&ActiveAwards=true) projects is `r paste0("$", format(mean(awards_g$amount), big.mark = ",", scientific = FALSE))`. The median amount is `r paste0("$", format(median(awards_g$amount), big.mark = ",", scientific = FALSE))`.
-
 
 # Abstract Analysis
 
@@ -259,7 +283,7 @@ We will remove common stopwords (e.g., this, that). We will also remove custom s
 :::
 
 ```{r}
-custom_stopwords <- c("will", "can", "br", "s", "g", "e", "(anr).")
+custom_stopwords <- c("will", "can", "br", "s", "g", "e", "(anr).", "project", "research", "study", "results", "across")
 ```
 
 We will remove extra whitespace, convert to lowercase, remove punctuation, remove numbers, remove custom stopwords, remove default stopwords, and remove extra whitespace again.
@@ -282,13 +306,22 @@ tdm <- TermDocumentMatrix(text_corpus) # Create a term-document matrix
 word_freqs <- sort(rowSums(as.matrix(tdm)), decreasing = TRUE) # Sort terms by frequency
 tdm_df <- data.frame(word = names(word_freqs), freq = word_freqs) # Create a data frame for the word frequencies
 
+
+set.seed(1234)
+
 freq <- ggplot(tdm_df[1:20,], aes(x = reorder(word, freq), y = freq)) + # Plot top 20 most frequent words
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity", fill = "#450084") +
   coord_flip() + # Flip axes for better readability
   labs(x = "Terms", y = "Count", title = "Most Common Words in Abstracts") +
-  ggeasy::easy_center_title() # Center the title in the plot
-
-freq
+  ggeasy::easy_center_title() + # Center the title in the plot
+  theme_void() + # Remove background elements
+  theme(axis.text.y = element_text(size = 12),
+        axis.text.x = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        element_text(color = '#A4232B'),
+        axis.title.x = element_text(colour = "#A4232B"),
+        axis.title.y = element_text(colour = "#A4232B"),
+        panel.background = element_rect(fill = "#F4EFE1")) 
 
 ggsave("figures/freq.png", freq, dpi = 300)
 ```
@@ -316,6 +349,11 @@ top_terms <- topics |>
   ungroup() |>
   arrange(topic, -beta)
 
+
+# Define your custom color palette
+jmu_palette <- c("#450084", "#CBB677", "#5498B6", "#A4232B", "#5F791C")
+
+# Apply the custom color palette to your plot
 tm <- top_terms |>
   mutate(term = reorder_within(term, beta, topic)) |>
   ggplot(aes(beta, term, fill = factor(topic))) +
@@ -323,9 +361,15 @@ tm <- top_terms |>
   facet_wrap(~ topic, scales = "free") +
   scale_y_reordered() +
   scale_x_continuous(labels = scales::percent_format(accuracy = 0.1)) +
+  theme_void() +
+  scale_fill_manual(values = jmu_palette) +  # Add this line
   theme(axis.text.y = element_text(size = 12),
-      axis.text.x = element_text(size = 12),
-      axis.title = element_text(size = 12))
+        axis.text.x = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        element_text(color = '#A4232B'),
+        axis.title.x = element_text(colour = "#A4232B"),
+        axis.title.y = element_text(colour = "#A4232B"),
+        panel.background = element_rect(fill = "#F4EFE1"))
 
 tm
 
@@ -355,14 +399,51 @@ We will create a graph from the bigrams. You can change the threshold for filter
 bigram_graph <- bigram_counts |> filter(n >= 20) |> # Filter to include only bigrams with frequency > 40
   igraph::graph_from_data_frame() # Create a graph from the bigram data frame
 
+
+set.seed(123)
+
+
+
 bigram <- ggraph(bigram_graph, layout = "fr") + # Create a force-directed graph of bigrams
-  geom_edge_link() +
-  geom_node_point() +
-  geom_node_text(aes(label = name), vjust = 1, hjust = 1, repel = TRUE) # Add labels to nodes with repelling effect
+  geom_edge_link(color = "#450084") +
+  geom_node_point(color = "#450084") +
+  geom_node_text(aes(label = name), vjust = 1, hjust = 1, repel = TRUE, color = "#450084") + # Add labels to nodes with repelling effect
+  theme_void() + # Remove background elements
+  theme(panel.background = element_rect(fill = "#F4EFE1"),
+        element_text(color = '#A4232B'))
+
 
 bigram
 
 ggsave("figures/bigram.png", bigram, dpi = 300)
+```
+
+## Bigram Frequency in Descriptions
+
+We will create a bar plot of the most common bigrams in the abstracts. You can change the number of bigrams to plot by changing the value of "n" in the `slice_max` function. I will use 20 in this example. You can change it to whatever you want.
+
+```{r}
+
+bigram_freq <- ggplot(bigram_counts[1:20,], aes(x = reorder(paste0(word1, " ", word2), n), y = n)) + # Plot top 20 most frequent words
+  geom_bar(stat = "identity", fill = "#450084") +
+  coord_flip() + # Flip axes for better readability
+  labs(x = "Bigrams", y = "Count", title = "Most Common Bigrams in Abstracts") +
+  theme_void() + # Remove background elements
+  # make the font size bigger
+  theme(axis.text.y = element_text(size = 10),
+        axis.text.x = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        element_text(color = '#A4232B'),
+        axis.title.x = element_text(colour = "#A4232B"),
+        axis.title.y = element_text(colour = "#A4232B")
+        ) +
+  #theme_void() + # Remove background elements
+  theme(panel.background = element_rect(fill = "#F4EFE1")) +
+  ggeasy::easy_center_title() # Center the title in the plot
+
+bigram_freq
+
+ggsave(here::here("figures/bigram_freq.png"), plot = bigram_freq, dpi = 300)
 ```
 
 # Abstract Takeaways
@@ -387,7 +468,7 @@ You can also use other AI tools for this task.
 
 # Rendering
 
-After you finish editing the Quarto document, you can render it to an .html file (or .pdf, .docx, .pptx -- but you need much more customization for that). 
+After you finish editing the Quarto document, you can render it to an .html file (or .pdf, .docx, .pptx -- but you need much more customization for that).
 
 You can do this by clicking on the "Render" button in the top center of the RStudio window (blue right-facing arrow icon). You can also use the keyboard shortcut CTRL+Shift+K (or Command+Shift+K on Mac) to render the document.
 
