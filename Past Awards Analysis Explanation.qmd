@@ -231,7 +231,7 @@ ggsave("figures/density_normal.png", density, dpi = 300)
 
 ## Awarded Amounts Option 2
 
-If your code is skewed, as in this example, you can use the following code which takes the log of the awarded amounts. Make sure to delete Option 1 then.
+If the awarded amounts are skewed, as in this example, you can use the following code which takes the log of the awarded amounts. Make sure to delete Option 1 then.
 
 ```{r}
 
@@ -362,7 +362,7 @@ tm <- top_terms |>
   scale_y_reordered() +
   scale_x_continuous(labels = scales::percent_format(accuracy = 0.1)) +
   theme_void() +
-  scale_fill_manual(values = jmu_palette) +  # Add this line
+  scale_fill_manual(values = jmu_palette) +
   theme(axis.text.y = element_text(size = 12),
         axis.text.x = element_text(size = 12),
         axis.title = element_text(size = 12),
@@ -378,7 +378,7 @@ ggsave("figures/tm.png", tm, dpi = 300)
 
 ## Word Networks (Bigrams) in Abstracts
 
-We will create a word network (bigram: two words) from the abstracts. You can change the bigrams to trigrams (three words) or more by changing the value of "n" in the unnest_tokens function. I will use bigrams in this example. You can change the value of "n" to whatever you want. I will also filter out common stopwords and custom stopwords we previously defined.
+We will create a word network (bigram: two words) from the abstracts. You can change the bigrams to trigrams (three words) or more by changing the value of "n" in the `unnest_tokens` function. I will use bigrams in this example. You can change the value of "n" to whatever you want. I will also filter out common stopwords and custom stopwords we previously defined.
 
 ```{r}
 awards_abstracts <- awards_abstracts |>

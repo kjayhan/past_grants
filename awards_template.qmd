@@ -155,7 +155,7 @@ ggsave("figures/density_normal.png", density, dpi = 300)
 
 # Awarded Amounts Option 2
 
-If your code is skewed, as in this example, you can use the following code which takes the log of the awarded amounts. Make sure to delete Option 1 then.
+If the awarded amounts are skewed, as in this example, you can use the following code which takes the log of the awarded amounts. Make sure to delete Option 1 then.
 
 ```{r}
 
