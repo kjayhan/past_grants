@@ -312,10 +312,14 @@ bigram_graph <- bigram_counts |> filter(n >= 20) |> # Filter to include only big
 
 set.seed(123)
 
+
 bigram <- ggraph(bigram_graph, layout = "fr") + # Create a force-directed graph of bigrams
-  geom_edge_link() +
-  geom_node_point() +
-  geom_node_text(aes(label = name), vjust = 1, hjust = 1, repel = TRUE) # Add labels to nodes with repelling effect
+  geom_edge_link(color = "#450084") +
+  geom_node_point(color = "#450084") +
+  geom_node_text(aes(label = name), vjust = 1, hjust = 1, repel = TRUE, color = "#450084") + # Add labels to nodes with repelling effect
+  theme_void() + # Remove background elements
+  theme(panel.background = element_rect(fill = "#F4EFE1"),
+        element_text(color = '#A4232B'))
 
 bigram
 

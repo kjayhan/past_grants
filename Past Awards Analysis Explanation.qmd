@@ -58,6 +58,14 @@ For more free R books, see [Dr. Mine Dogucu's website](https://www.learnr4free.c
 
 # Downloading the Repository
 
+:::{.callout-important}
+If you don't have Git installed, you can download the repository as a zip file by clicking on the green "Code" button and selecting "Download ZIP." Then, extract the zip file to a folder on your computer.
+
+Then, open RStudio, and click on the "File" menu, then "New Project," and select "Existing Directory." Select the folder where you extracted the zip file.
+
+Alternatively, you can install git by following the instructions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+:::
+
 After installing R and RStudio, open RStudio, and click on the “File” menu, then “New Project,” "Version Control," and then “Git.”
 
 Under the "Repository URL" box, paste the URL of the repository: <https://github.com/kjayhan/past_grants.git>. Name the project directory, select a folder to save it in, and click 'Create Project'.
@@ -84,6 +92,7 @@ After downloading the repository, you need to install the packages that we will 
 # install.packages("igraph")
 # install.packages("janitor")
 # install.packages("ggeasy")
+# install.packages("shape2")
 ```
 
 Then we load the packages we will be using. This is similar to opening an app on your phone to be able to use it. You can do this by running the following code in the R console.
@@ -443,7 +452,7 @@ bigram_freq <- ggplot(bigram_counts[1:20,], aes(x = reorder(paste0(word1, " ", w
 
 bigram_freq
 
-ggsave(here::here("figures/bigram_freq.png"), plot = bigram_freq, dpi = 300)
+ggsave("figures/bigram_freq.png", plot = bigram_freq, dpi = 300)
 ```
 
 # Abstract Takeaways
