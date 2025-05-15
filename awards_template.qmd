@@ -32,6 +32,7 @@ embed-resources: true
 # install.packages("igraph")
 # install.packages("janitor")
 # install.packages("ggeasy")
+# install.packages("reshape2")
 
 ```
 
