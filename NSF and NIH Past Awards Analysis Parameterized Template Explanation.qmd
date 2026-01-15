@@ -20,6 +20,9 @@ editor: source
 warning: false
 #echo: false
 embed-resources: true
+include-in-header:
+  text: |
+    <meta name="referrer" content="strict-origin-when-cross-origin">
 ---
 
 # Introduction
@@ -36,7 +39,7 @@ First, install R and RStudio. R is the programming language, while RStudio is an
 
 You can refer to the following [video](https://www.youtube.com/watch?v=ulIv0NiVTs4) for a step-by-step guide on how to install R and RStudio.
 
-{{< video https://www.youtube.com/watch?v=ulIv0NiVTs4 >}}
+{{< video https://www.youtube-nocookie.com/embed/ulIv0NiVTs4 >}}
 
 :::{.callout-note}
 This is not a guide to teach you R. If you are interested in learning R, I recommend the following resources:
