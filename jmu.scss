@@ -64,7 +64,7 @@ $headings-color: $purple !default;
 $body-color: $gray-dark !default;
 
 // Links
-$link-color: $purple !default;
+$link-color: $red !default;
 $link-decoration: none !default;
 $link-hover-color: $gold !default;
 $link-hover-decoration: underline !default;
@@ -90,6 +90,25 @@ $footer-bg: $gray-dark !default;
 $footer-fg: $gray-light !default;
 
 /*-- scss:rules --*/
+
+h1 {
+  font-weight: bold;
+  font-size: 200%; 
+}
+
+h2 {
+  font-weight: bold;
+  font-size: 150%;
+}
+
+h3 {
+  font-weight: bold;
+  font-size: 120%;
+}
+
+h4 {
+  font-size: 100%;
+}
 
 $web-font-path: "https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" !default;
 
@@ -161,13 +180,48 @@ pre.text, pre.sourceCode, .cell-output pre {
     padding-bottom: 0.25rem;
 }
 
-#title-block-header {
-    .quarto-title-banner {
-        font-family: $headings-font-family;
-        
-        .description {
-            font-size: 1.1em;
-            margin-top: 1em !important;
-        }
+// Heading styles
+// Heading styles
+h1, h2 {
+  font-weight: bold;
+  a {
+    font-weight: inherit;
+    color: $red;
+    text-decoration: none;
+
+    &:hover {
+      color: $gold;
     }
+  }
 }
+
+h3 {
+  font-style: italic;
+  font-weight: normal;
+  a {
+    font-style: inherit;
+    font-weight: inherit;
+    color: $red;
+    text-decoration: none;
+
+    &:hover {
+      color: $gold;
+    }
+  }
+}
+
+h4 {
+  font-style: normal;
+  font-weight: normal;
+  a {
+    font-style: inherit;
+    font-weight: inherit;
+    color: $red;
+    text-decoration: none;
+
+    &:hover {
+      color: $gold;
+    }
+  }
+}
+

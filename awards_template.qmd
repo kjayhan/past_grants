@@ -151,7 +151,7 @@ density
 
 # Save the plot to a file. You can change the file name and the path to the file.
 
-ggsave("figures/density_normal.png", density, dpi = 300)
+# (ggsave("figures/density_normal.png", density, dpi = 300)
 ```
 
 # Awarded Amounts Option 2
@@ -185,7 +185,7 @@ density_log
 
 # Save the plot to a file. You can change the file name and the path to the file.
 
-ggsave("figures/density_log.png", density_log, dpi = 300)
+# (ggsave("figures/density_log.png", density_log, dpi = 300)
 
 ```
 
@@ -239,7 +239,7 @@ freq <- ggplot(tdm_df[1:20,], aes(x = reorder(word, freq), y = freq)) + # Plot t
 
 freq
 
-ggsave("figures/freq.png", freq, dpi = 300)
+# (ggsave("figures/freq.png", freq, dpi = 300)
 ```
 
 ## Topic Modeling in Abstracts
@@ -288,7 +288,7 @@ tm <- top_terms |>
 
 tm
 
-ggsave("figures/tm.png", tm, dpi = 300)
+# (ggsave("figures/tm.png", tm, dpi = 300)
 ```
 
 ## Word Networks (Bigrams) in Abstracts
@@ -324,7 +324,7 @@ bigram <- ggraph(bigram_graph, layout = "fr") + # Create a force-directed graph 
 
 bigram
 
-ggsave("figures/bigram.png", bigram, dpi = 300)
+# (ggsave("figures/bigram.png", bigram, dpi = 300)
 ```
 
 ## Bigram Frequency in Descriptions
@@ -350,7 +350,7 @@ bigram_freq <- ggplot(bigram_counts[1:20,], aes(x = reorder(paste0(word1, " ", w
 
 bigram_freq
 
-ggsave(here::here("figures/bigram_freq.png"), plot = bigram_freq, dpi = 300)
+# (ggsave(here::here("figures/bigram_freq.png"), plot = bigram_freq, dpi = 300)
 ```
 
 # Abstract Takeaways
