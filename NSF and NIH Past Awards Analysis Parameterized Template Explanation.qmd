@@ -72,7 +72,7 @@ Under the "Repository URL" box, paste the URL of the repository: <https://github
 
 This repository contains the Quarto templates, the R code, and sample awards data files that you need to analyze past awards. There is also a bonus jmu.scss file that you can use to customize the look of your Quarto document. You can also use this theme I created for JMU branding if you want.
 
-Open the "nsf_awards_template.qmd" file in RStudio. This is the template you will use to analyze past NSF awards data. Save it as "NSF X awards.qmd" or whatever you want to name it within the same directory you created by downloading my repository.
+Open the "nsf_awards_template.qmd" (for NSF) or the "nih_awards_template.qmd" (for NIH) file in RStudio. This is the template you will use to analyze past NSF awards data. Save it as "X awards.qmd" or whatever you want to name it within the same directory you created by downloading my repository.
 
 :::{.callout-important}
 When analyzing your past award data, ensure you place it in the data folder as a ".csv" file within the same directory you created by downloading my repository. For NSF past awards, click "Browse Projects Funded by This Program" under any NSF program, then click "CSV" to download the data.
@@ -80,7 +80,7 @@ When analyzing your past award data, ensure you place it in the data folder as a
 
 # Modifying the Template
 
-In the "NSF X awards.qmd" file you just saved, you will only adjust YAML metadata at the top.
+In the "X awards.qmd" file you just saved, you will only adjust YAML metadata at the top.
 
 ## Title and Subtitle
 
