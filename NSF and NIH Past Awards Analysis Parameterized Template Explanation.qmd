@@ -1,0 +1,303 @@
+---
+title: "Analyzing Past Awards using R"
+subtitle: "A Beginner's Guide with Minimal Code-Tweaking"
+date: today
+author: 
+  - name: "[Kadir Jun Ayhan](https://ayhan.phd)"
+    degrees: "Ph.D."
+    email: ayhankx@jmu.edu
+    affiliations:
+      - name: "JMU REDI Office of Research Development"
+format: 
+  html:
+    theme: jmu.scss
+    title-block-banner: "#450084"
+    title-block-banner-color: "#CBB677"
+    toc: true
+    code-fold: true
+    code-summary: "Show the code"
+editor: source
+warning: false
+#echo: false
+embed-resources: true
+---
+
+# Introduction
+
+How can we analyze and present past award data with no to minimal knowledge of R?
+
+That can be challenging, especially when you encounter problems. But it is not impossible. Previously I gave a [beginner-friendly introduction to analyzing past awards in R](https://ayhan.phd/blog/rd/2025-05-01%20Analyzing%20Past%20Grants%20using%20R/), but this was also complicated for those with no R experience. This time, I created a template that requires no code-tweaking. Once you install R and RStudio, and download the repository, this template should work.
+
+You can rely mostly on the provided code, and I will explain what you need to modify. Where stuck, [Github Copilot](https://github.com/features/copilot), which is free for those with university affiliations, or other generative AI tools can come to your help. However, you would need to explain your error clearly and step-by-step to get the best results.
+
+# Installing R and RStudio
+
+First, install R and RStudio. R is the programming language, while RStudio is an integrated development environment (IDE) for R. You can download R from [here](https://cran.r-project.org/), and RStudio from [here](https://www.rstudio.com/products/rstudio/download/).
+
+You can refer to the following [video](https://www.youtube.com/watch?v=ulIv0NiVTs4) for a step-by-step guide on how to install R and RStudio.
+
+{{< video https://www.youtube.com/watch?v=ulIv0NiVTs4 >}}
+
+:::{.callout-note}
+This is not a guide to teach you R. If you are interested in learning R, I recommend the following resources:
+
+[R for Data Science](https://r4ds.had.co.nz/){target="_blank"}
+
+[Hands-on Data Visualization](https://handsondataviz.org/){target="_blank"}
+
+[Data Visualization - Andrew Heiss](https://datavizs23.classes.andrewheiss.com/){target="_blank"}
+
+Course: [Harvard on Edx - Data Science: R Basics](https://www.edx.org/course/data-science-r-basics){target="_blank"}
+
+JMU Course for JMU staff/ students: [Introduction to R](https://www.jmu.edu/cfi/scholarship/resources/developing-your-skills.shtml#qskills1)
+
+Hands-on-practice: [Datacamp](https://www.datacamp.com){target="_blank"}
+
+For more free R books, see [Dr. Mine Dogucu's website](https://www.learnr4free.com/en/index.html){target="_blank"}.
+:::
+
+# Downloading the Repository
+
+:::{.callout-important}
+If you don't have Git installed, you can download the repository as a zip file by clicking on the green "Code" button and selecting "Download ZIP." Then, extract the zip file to a folder on your computer.
+
+Then, open RStudio, and click on the "File" menu, then "New Project," and select "Existing Directory." Select the folder where you extracted the zip file.
+
+Alternatively, you can install git by following the instructions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+:::
+
+After installing R and RStudio, open RStudio, and click on the “File” menu, then “New Project,” "Version Control," and then “Git.”
+
+Under the "Repository URL" box, paste the URL of the repository: <https://github.com/kjayhan/past_grants.git>. Name the project directory, select a folder to save it in, and click 'Create Project'.
+
+This repository contains the Quarto templates, the R code, and sample awards data files that you need to analyze past awards. There is also a bonus jmu.scss file that you can use to customize the look of your Quarto document. You can also use this theme I created for JMU branding if you want.
+
+Open the "nsf_awards_template.qmd" file in RStudio. This is the template you will use to analyze past NSF awards data. Save it as "NSF X awards.qmd" or whatever you want to name it within the same directory you created by downloading my repository.
+
+:::{.callout-important}
+When analyzing your past award data, ensure you place it in the data folder as a ".csv" file within the same directory you created by downloading my repository. For NSF past awards, click "Browse Projects Funded by This Program" under any NSF program, then click "CSV" to download the data.
+:::
+
+# Modifying the Template
+
+In the "NSF X awards.qmd" file you just saved, you will only adjust YAML metadata at the top.
+
+## Title and Subtitle
+
+
+```yaml
+title: "Grant title"
+subtitle: "An Analysis of the Past Awards since 2017"
+```
+
+* Replace the text inside quotation marks
+* Keep the quotation marks
+
+
+## Author Information
+
+```yaml
+author: 
+  - name: "[name](https://www.jmu.edu)"
+    degrees: Ph.D.
+    affiliations: James Madison University
+    email: your_email@jmu.edu
+    phone: 000-000-0000
+```
+
+* Change the name and URL (keep `[text](link)` format)
+* Change or remove `degrees`
+* Update affiliation, email, and phone
+
+**Do not remove brackets, parentheses, or indentation**
+
+
+
+## Date
+
+```yaml
+date: today
+```
+
+* Leave as `today` for automatic date
+* Or replace with a fixed date (e.g., `"January 20, 2026"`)
+
+
+
+## Output Format and Styling (Optional)
+
+```yaml
+format: 
+  html:
+    theme: jmu.scss
+    title-block-banner: "#450084"
+    title-block-banner-color: "#CBB677"
+    toc: true
+```
+
+* It would be best to keep it as is
+
+* Feel free to modify this part of the YAML or jmu.scss for custom styling when you feel comfortable doing so.
+
+
+## Program Parameters (Most Important Section)
+
+All analysis behavior is controlled here:
+
+```yaml
+params:
+```
+
+### Program Name
+
+```yaml
+program: "[NIH R25 Grants](https://grants.nih.gov/funding/activity-codes/R25)"
+```
+
+* Replace the title and URL
+* Keep `[title](url)` format
+
+
+
+### Introduction Text
+
+```yaml
+introduction: "Add introductory text here for the award program"
+```
+
+* Write a short overview of the grant program. You can copy-paste from the program page.
+
+
+
+### CSV Data File
+
+```yaml
+csv: "data/r25.csv"
+```
+
+* Place your CSV file in the specified `r data` folder
+* Update filename if needed. If your file is named `my_awards.csv`, change this to `"data/my_awards.csv"`
+* Keep quotation marks
+* Keep the `data/` folder path
+
+
+
+### Title Filtering (Optional)
+
+```yaml
+title_keep_only: ""
+title_filter_out: ""
+```
+
+Examples:
+
+```yaml
+title_keep_only: "training|education"
+title_filter_out: "conference|supplement"
+```
+
+* Use `|` to separate multiple terms
+* Leave empty (`""`) if unused
+* `title_keep_only` → keeps only awards with these terms in the title
+* `title_filter_out` → excludes awards with these terms in the title
+
+### Time Range
+
+```yaml
+years_keep: 2016
+```
+
+* Analyzes data from this year onward
+* Use a four-digit year
+
+
+### Funding Amount Transformation
+
+```yaml
+amount: "log"
+```
+
+**Options:**
+
+* `"normal"` → raw dollar amounts
+* `"log"` → logarithmic scale (recommended), but try both to see which you prefer.
+
+
+### Topic Modeling
+
+```yaml
+k: 3
+```
+
+* Number of topics to extract
+* Typical range: 2–5
+
+### Word Network Size
+
+```yaml
+word_network_n: 200
+```
+
+* The minimum number of co-occurrences for a bigram to be included in the network graph
+* Larger values create denser graphs
+* Try a few values to see which you prefer. For datasets with 1000+ awards, n = 5i or mores typical). For smaller datasets, smaller values (e.g., 10, 20) are better.
+
+
+### Takeaways Section
+
+```yaml
+takeaways: "Write your takeaways based on the findings here"
+```
+
+* Write your interpretation of results
+* Appears in the final report
+
+
+## What NOT to Touch
+
+Do **not** edit:
+
+* Any R code chunks
+* Anything outside the YAML unless you feel comfortable with R
+* Indentation or punctuation in YAML
+
+If you stay within the YAML section, the document will render safely.
+
+## Other Text
+
+You can add more text in the document body if you feel comfortable with R Markdown/ Quarto syntax. However, this is optional.
+
+At the end of the document (after the **Abstract Takeaways** section), you can add your own text, images, or sections as needed. 
+
+To add a new first-level heading, write "#First-Level Heading" on a new line. For a second-level heading, use "## Second-Level Heading," and so on.
+
+See [Quarto documentation](https://quarto.org/docs/authoring/) for more details on Quarto authoring.
+
+# How to Render the Document
+
+1. Click **Render** button in RStudio toolbar that looks like a blue arrow facing right next to the magnifying glass icon.
+2. Wait
+3. HTML output opens in your browser
+
+# Common Issues
+
+- Internet is required only for the first run
+
+- First render takes a long time, because packages are installing
+
+- If you receive an error suggesting that CSV file is not found, check filename and folder path
+
+
+# Final Output
+
+The rendered HTML file:
+
+* Is fully self-contained
+* Can be shared or emailed
+* Does not require R to view
+* You or others can open it in any web browser
+
+
+# Congratulations
+
+Congratulations! You have successfully analyzed past award data using R and RStudio, but without coding! You can now use this knowledge to analyze your own past award data. If you have any questions or need help, feel free to reach out to [me](mailto:ayhankx@jmu.edu) (after you consult with your AI assistant(s) first!).
