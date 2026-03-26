@@ -3,11 +3,10 @@ title: "Grant title" # You can change this title
 subtitle: "An Analysis of the Past Awards since 2016" # You can replace the subtitle
 date: today
 author: 
-  - name: "[name](https://www.jmu.edu)" # Change the name and the link without touching the parantheses.
-    degrees: Ph.D. # You can remove this line.
-    affiliations: James Madison University # Change the name of the university.
-    email: your_email@jmu.edu # Change the email address.
-    phone: 000-000-0000 # Change the phone number.
+  - name: "[Office of Research Development](https://www.jmu.edu/research/development/index.shtml)"
+    email: researchdevelopment@jmu.edu
+    affiliations: 
+      - name: "REDI Division\n\nJames Madison University"
 format: 
   html:
     theme: jmu.scss # comment this if you don't want to use my custom JMU theme. Or you can edit the colors in that file.
@@ -62,7 +61,8 @@ required_packages <- c(
   "ggraph",      # Graph-based visualizations
   "igraph",      # Graph analysis
   "ggeasy",      # Easy ggplot labeling
-  "usmap"        # US maps
+  "usmap",       # US maps
+  "reshape2"     # reshaping data between wide and long formats
 )
 
 # Install any missing packages

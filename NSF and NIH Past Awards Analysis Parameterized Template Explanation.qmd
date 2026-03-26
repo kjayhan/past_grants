@@ -97,20 +97,43 @@ subtitle: "An Analysis of the Past Awards since 2017"
 * Keep the quotation marks
 
 
-## Author Information
+<!-- ## Author Information -->
 
-```yaml
-author: 
-  - name: "[name](https://www.jmu.edu)"
-    degrees: Ph.D.
-    affiliations: James Madison University
-    email: your_email@jmu.edu
-    phone: 000-000-0000
-```
 
-* Change the name and URL (keep `[text](link)` format)
-* Change or remove `degrees`
-* Update affiliation, email, and phone
+<!-- Currently the author information is as follows. -->
+
+<!-- ```yaml -->
+<!-- author:  -->
+<!--   - name: "[Office of Research Development](https://www.jmu.edu/research/development/index.shtml)" -->
+<!--     email: researchdevelopment@jmu.edu -->
+<!--     affiliations:  -->
+<!--       - name: "REDI Division\n\nJames Madison University" -->
+<!-- ``` -->
+
+<!-- You can also change it to the following if desired. -->
+
+<!-- ```yaml -->
+<!-- author:  -->
+<!--   - name: "[name](https://www.jmu.edu)" -->
+<!--     degrees: Ph.D. -->
+<!--     affiliations: James Madison University -->
+<!--     email: your_email@jmu.edu -->
+<!--     phone: 000-000-0000 -->
+<!-- ``` -->
+
+
+<!-- ```yaml -->
+<!-- author:  -->
+<!--   - name: "[name](https://www.jmu.edu)" -->
+<!--     degrees: Ph.D. -->
+<!--     affiliations: James Madison University -->
+<!--     email: your_email@jmu.edu -->
+<!--     phone: 000-000-0000 -->
+<!-- ``` -->
+
+<!-- * Change the name and URL (keep `[text](link)` format) -->
+<!-- * Change or remove `degrees` -->
+<!-- * Update affiliation, email, and phone -->
 
 **Do not remove brackets, parentheses, or indentation**
 
@@ -272,7 +295,7 @@ You can add more text in the document body if you feel comfortable with R Markdo
 
 At the end of the document (after the **Abstract Takeaways** section), you can add your own text, images, or sections as needed. 
 
-To add a new first-level heading, write "#First-Level Heading" on a new line. For a second-level heading, use "## Second-Level Heading," and so on.
+To add a new first-level heading, write "# First-Level Heading" on a new line. For a second-level heading, use "## Second-Level Heading," and so on.
 
 See [Quarto documentation](https://quarto.org/docs/authoring/) for more details on Quarto authoring.
 

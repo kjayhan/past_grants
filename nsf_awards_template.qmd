@@ -3,11 +3,10 @@ title: "Grant title" # You can change this title
 subtitle: "An Analysis of the Past Awards since 2016" # You can replace the subtitle
 date: today
 author: 
-  - name: "[name](https://www.jmu.edu)" # Change the name and the link.
-    degrees: Ph.D. # You can remove this line.
-    affiliations: James Madison University # Change the name of the university.
-    email: your_email@jmu.edu # Change the email address.
-    phone: 000-000-0000 # Change the phone number.
+  - name: "[Office of Research Development](https://www.jmu.edu/research/development/index.shtml)"
+    email: researchdevelopment@jmu.edu
+    affiliations: 
+      - name: "REDI Division\n\nJames Madison University"
 format: 
   html:
     theme: jmu.scss # comment this if you don't want to use my custom JMU theme. Or you can edit the colors in that file.
@@ -32,34 +31,38 @@ params:
 ---
 
 ```{r}
-# Uncomment the following lines if you want to install these packages. You only need to this once. You can uncomment by removing hashtags.
-
-# install.packages("tidyverse")
-# install.packages("tidytext")
-# install.packages("stopwords")
-# install.packages("topicmodels")
-# install.packages("tm")
-# install.packages("ggraph")
-# install.packages("igraph")
-# install.packages("janitor")
-# install.packages("ggeasy")
-# install.packages("reshape2")
-# install.packages("usmap")
-
-```
-
-```{r}
 # You need to load the libraries each time to use them just like you open an app to use it on your phone.
 
-library(tidyverse) # Data manipulation and visualization
-library(janitor) # Data cleaning tools
-library(tidytext) # Text mining and processing
-library(stopwords) # Access to stopword lists
-library(topicmodels) # For topic modeling
-library(tm) # Text mining utilities
-library(ggraph) # For creating graph-based visualizations
-library(igraph) # Graph analysis
-library(ggeasy) # Easy labeling of ggplot2 graphs
+# List of required packages
+required_packages <- c(
+  "tidyverse",   # Data manipulation and visualization
+  "janitor",     # Data cleaning tools
+  "tidytext",    # Text mining and processing
+  "stopwords",   # Stopword lists
+  "topicmodels", # Topic modeling
+  "tm",          # Text mining utilities
+  "ggraph",      # Graph-based visualizations
+  "igraph",      # Graph analysis
+  "ggeasy",      # Easy ggplot labeling
+  "usmap",       # US maps
+  "reshape2"     # reshaping data between wide and long formats
+)
+
+# Install any missing packages
+installed <- rownames(installed.packages())
+to_install <- setdiff(required_packages, installed)
+
+if (length(to_install) > 0) {
+  install.packages(
+    to_install,
+    dependencies = TRUE,
+    repos = "https://cloud.r-project.org"
+  )
+}
+
+# Load all packages
+invisible(lapply(required_packages, library, character.only = TRUE))
+
 
 ```
 

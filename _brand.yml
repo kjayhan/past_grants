@@ -1,0 +1,102 @@
+meta:
+  name: jmu_brand
+
+color:
+  palette:
+    purple: "#450084"
+    purple-med: "#B599CE"
+    purple-light: "#DACCE6"
+    gold: "#CBB677"
+    gold-dark: "#AD9C65"
+    gold-light: "#F4EFE1"
+    gray: "#333333"
+    gray-dark: "#595959"
+    gray-medium: "#B2B2B2"
+    gray-light: "#D6D6D6"
+    green-dark: "#5F791C"
+    green-medium: "#ADCC23"
+    green-light: "#DEEBA7"
+    blue-dark: "#3C738B"
+    blue-medium: "#5498B6"
+    blue-light: "#D2EBF5"
+    red: "#A4232B"
+    black: "#000000"
+
+  primary: purple
+  secondary: gold
+  success: blue-dark
+  info: blue-medium
+  warning: gold-dark
+  danger: red
+  light: gray-light
+  dark: gray-dark
+
+logo:
+  images:
+    light: "html/Research-Economic-Innovation-ampersand-horizontal-purple-118_3x.png"
+
+typography:
+  fonts:
+    - family: Jost
+      source: google
+      weight: [100,200,300,400,500,600,700,800,900]
+    - family: Libre Franklin
+      source: google
+      weight: [100,200,300,400,500,600,700,800,900]
+
+defaults:
+  typst:
+    mainfont: Libre Franklin
+    headingfont: Jost
+
+    # === Color equivalents ===
+    textcolor: "#595959"        # $body-color
+    headingcolor: "#450084"     # $headings-color
+    linkcolor: "#A4232B"        # $link-color
+    toc-color: "#B599CE"
+
+    code-bg: "#D6D6D6"
+    code-color: "#595959"
+
+    # === Typst styling to mimic SCSS rules ===
+    raw: |
+      // Typography
+      #set text(
+        hyphenate: false,
+        justify: false
+      )
+
+      #set heading(
+        font: "Jost",
+        weight: 600
+      )
+
+      // Heading sizes (SCSS % → Typst em)
+      #show heading.where(level: 1): it => [
+        #set text(size: 1.9em)
+        #it
+      ]
+
+      #show heading.where(level: 2): it => [
+        #set text(size: 1.5em)
+        #it
+      ]
+
+      #show heading.where(level: 3): it => [
+        #set text(size: 1.2em, style: italic, weight: 400)
+        #it
+      ]
+
+      #show heading.where(level: 4): it => [
+        #set text(size: 1.0em, weight: 400)
+        #it
+      ]
+
+      // Links (including links inside headings)
+      #show link: it => [
+        #set text(
+          fill: rgb("#A4232B"),
+          decoration: underline
+        )
+        #it
+      ]

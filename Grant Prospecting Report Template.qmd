@@ -1,0 +1,182 @@
+---
+title: "Grant Opportunities Related to `r params$topic`" # Update the title if desired
+subtitle: "" # Add a subtitle if desired, e.g., "Madison Research Club February 2026"
+date: today # You can change the date to a specific date if you want, e.g., "February 11, 2026"
+date-format: long
+language:
+  title-block-published: "Date"
+author: 
+  - name: "[Office of Research Development](https://www.jmu.edu/research/development/index.shtml)"
+    email: researchdevelopment@jmu.edu
+    affiliations: 
+      - name: "REDI Division\n\nJames Madison University"
+brand: _brand.yml
+format: 
+  typst:
+    template: ../html/jmu_grant_prospecting.typ
+editor: source
+warning: false
+echo: false
+embed-resources: true
+params:
+  topic: "A topic" # Update with the desired topic for the grant opportunities
+  program_ids: [500, 501, 100] # Update with relevant program IDs for the topic (program_id column)
+  date_cutoff: "2026-04-01" # "YYYY-MM-DD" Update with the desired cutoff date for upcoming deadlines
+  url: "https://docs.google.com/spreadsheets/..." # Update with the URL of the Google Sheet containing the grants data
+---
+
+
+```{r}
+#| label: setup
+#| include: false
+
+# Auto-install any missing packages
+required_packages <- c("tidyverse", "lubridate", "tinytable", "googlesheets4")
+
+missing <- required_packages[!required_packages %in% installed.packages()[, "Package"]]
+if (length(missing) > 0) install.packages(missing)
+
+library(tidyverse)
+library(lubridate)
+library(tinytable)
+```
+
+# Summary
+
+
+The following are some upcoming grant opportunities related to `r params$topic`.
+
+Feel free to reach out to the [Office of Research Development](https://www.jmu.edu/research/development/index.shtml) for assistance with identifying more specific funding opportunities, developing proposals, and finding collaborators.
+
+# Current Opportunities
+
+```{r}
+
+# grants <- read_csv("data/coe_2025_grants.csv")
+
+googlesheets4::gs4_auth(email = TRUE) 
+
+grants <- googlesheets4::read_sheet(params$url) |>
+  select(program, funder, url, deadline, amount, synopsis, notes, program_id, discipline) |>
+  filter(program_id %in% c(params$program_ids)) 
+
+# grants <- read_csv("data/grants.csv") |>
+#   select(program, funder, url, deadline, amount, synopsis, notes, program_id) |>
+#   filter(program_id %in% c(params$program_ids)) 
+
+
+```
+
+
+```{r}
+# ── Typst-safe helpers ────────────────────────────────────────────────────────
+
+# Escape characters that Typst treats as special syntax.
+# $ opens math mode; \ is an escape character itself.
+typst_escape <- function(x) {
+  x <- gsub("\\\\", "\\\\\\\\", x)   # backslash first (must be before $)
+  x <- gsub("\\$",  "\\\\$",   x)    # dollar sign  → \$
+  x
+}
+
+# Format a grant amount and escape it for Typst.
+format_amount <- function(x) {
+  if (is.null(x) || length(x) == 0 || is.na(x)) return("")
+  x_char <- as.character(x)
+  if (x_char %in% c("NULL", "Not Specified", "")) return(x_char)
+  # Range / level strings — escape any $ already present then return
+  if (grepl("Level|to", x_char)) return(typst_escape(x_char))
+  # Already formatted with a leading $ — escape and return
+  if (grepl("^\\$", x_char)) return(typst_escape(x_char))
+  # Plain number — format with commas and a Typst-safe dollar sign
+  x_num <- suppressWarnings(as.numeric(x_char))
+  if (!is.na(x_num)) {
+    return(paste0("\\$", format(x_num, big.mark = ",", scientific = FALSE)))
+  }
+  typst_escape(x_char)
+}
+
+# Build a red Typst hyperlink (uses the #link() built-in).
+typst_link <- function(url, label) {
+  paste0('#link("', url, '")[', label, ']')
+}
+
+# Build a purple Typst hyperlink (uses the #plink() helper from jmu.typ).
+typst_purple_link <- function(url, label) {
+  paste0('#plink("', url, '")[', label, ']')
+}
+
+# Prepare a data frame for tt(): escape text columns, format amounts,
+# build hyperlinked program column, then rename for display.
+prepare_grants <- function(df, purple_links = FALSE) {
+  link_fn <- if (purple_links) typst_purple_link else typst_link
+
+  df |>
+    mutate(
+      # Hyperlinked program name
+      Program  = link_fn(url, program),
+      # Escape free-text columns so stray $ / \ don't break Typst
+      Sponsor  = typst_escape(as.character(funder)),
+      Deadline = as.character(deadline),
+      Amount   = map_chr(amount, format_amount),
+      Synopsis = typst_escape(as.character(synopsis))
+    ) |>
+    select(Program, Sponsor, Deadline, Amount, Synopsis)
+}
+
+# Render a grants data frame as a Typst-ready tinytable.
+grants_table <- function(df, purple_links = FALSE) {
+  prepare_grants(df, purple_links = purple_links) |>
+    tt(
+      escape = FALSE,   # pass #link()/#plink() markup through raw
+      width  = c(0.18, 0.15, 0.12, 0.12, 0.43)
+    )
+}
+```
+
+
+```{r}
+#| label: current-filter
+
+grants_current <- grants |>
+  mutate(deadline = map_chr(deadline, ~ifelse(is.null(.x), "Rolling", .x))) |>
+  mutate(deadline_parsed = mdy(deadline)) |>
+  filter(deadline_parsed > as.Date(params$date_cutoff) | is.na(deadline_parsed)) |>
+  filter(discipline != "Research Development") |>
+  arrange(deadline_parsed) |>
+  select(-deadline_parsed, -discipline)
+```
+
+```{r}
+#| label: current-table
+
+grants_table(grants_current)
+```
+
+# Grants to Monitor
+
+```{r}
+#| label: past-filter
+
+grants_past <- grants |>
+  mutate(deadline = map_chr(deadline, ~ifelse(is.null(.x), "Rolling", .x))) |>
+  mutate(deadline_parsed = mdy(deadline)) |>
+  filter(deadline_parsed <= as.Date(params$date_cutoff) | discipline == "Research Development") |>
+  arrange(deadline_parsed) |>
+  select(-deadline_parsed, -discipline)
+```
+
+```{r}
+#| label: past-table
+
+# Pass purple_links = TRUE to render the Program column in JMU purple
+# instead of the default red. Requires #plink() defined in jmu.typ.
+grants_table(grants_past, purple_links = FALSE)
+```
+
+# Contact
+
+Office of Research Development
+
+**Email:** [researchdevelopment@jmu.edu](mailto:researchdevelopment@jmu.edu)
+
