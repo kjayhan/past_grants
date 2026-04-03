@@ -126,11 +126,24 @@ prepare_grants <- function(df, purple_links = FALSE) {
 
 # Render a grants data frame as a Typst-ready tinytable.
 grants_table <- function(df, purple_links = FALSE) {
-  prepare_grants(df, purple_links = purple_links) |>
+  prepared <- prepare_grants(df, purple_links = purple_links)
+  tbl <- prepared |>
     tt(
-      escape = FALSE,   # pass #link()/#plink() markup through raw
+      escape = FALSE,
       width  = c(0.18, 0.15, 0.12, 0.12, 0.43)
     )
+
+  if (nrow(prepared) > 1) {
+    tbl <- tbl |>
+      style_tt(
+        i          = seq_len(nrow(prepared) - 1),
+        line       = "b",
+        line_color = "#cccccc",
+        line_width = 0.05
+      )
+  }
+
+  tbl
 }
 ```
 
@@ -171,7 +184,13 @@ grants_past <- grants |>
 
 # Pass purple_links = TRUE to render the Program column in JMU purple
 # instead of the default red. Requires #plink() defined in jmu.typ.
-grants_table(grants_past, purple_links = FALSE)
+
+grants_past <- grants |>
+  mutate(deadline = map_chr(deadline, ~ifelse(is.null(.x), "Rolling", .x))) |>
+  mutate(deadline_parsed = mdy(deadline)) |>
+  filter(deadline_parsed <= as.Date(params$date_cutoff)) |>
+  arrange(deadline_parsed) |>
+  select(-deadline_parsed)
 ```
 
 # Contact

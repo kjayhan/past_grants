@@ -125,9 +125,9 @@
 }
 
 // ────────────────────────────────────────────────────────────
-// 5. LINKS  (link-color: purple)
+// 5. LINKS  (link-color: red)
 // ────────────────────────────────────────────────────────────
-#show link: it => text(fill: c-purple)[#it]
+#show link: it => text(fill: c-red)[#it]
 
 // ────────────────────────────────────────────────────────────
 // 6. CODE  (code-bg: gray-light, code-color: gray-dark)
