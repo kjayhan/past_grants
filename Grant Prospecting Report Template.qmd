@@ -13,25 +13,24 @@ author:
 brand: _brand.yml
 format: 
   typst:
-    template: ../html/jmu_grant_prospecting.typ
-editor: source
+    template: jmu_grant_prospecting.typ
+editor: visual
 warning: false
 echo: false
 embed-resources: true
 params:
   topic: "A topic" # Update with the desired topic for the grant opportunities
   program_ids: [500, 501, 100] # Update with relevant program IDs for the topic (program_id column)
-  date_cutoff: "2026-04-01" # "YYYY-MM-DD" Update with the desired cutoff date for upcoming deadlines
-  url: "https://docs.google.com/spreadsheets/..." # Update with the URL of the Google Sheet containing the grants data
+  date_cutoff: "2026-04-19" # "YYYY-MM-DD" Update with the desired cutoff date for upcoming deadlines
+  xlsx: "data/JMU ORD Calendar - Automatic Populate.xlsx"
 ---
-
 
 ```{r}
 #| label: setup
 #| include: false
 
 # Auto-install any missing packages
-required_packages <- c("tidyverse", "lubridate", "tinytable", "googlesheets4")
+required_packages <- c("tidyverse", "lubridate", "tinytable", "readxl")
 
 missing <- required_packages[!required_packages %in% installed.packages()[, "Package"]]
 if (length(missing) > 0) install.packages(missing)
@@ -43,7 +42,6 @@ library(tinytable)
 
 # Summary
 
-
 The following are some upcoming grant opportunities related to `r params$topic`.
 
 Feel free to reach out to the [Office of Research Development](https://www.jmu.edu/research/development/index.shtml) for assistance with identifying more specific funding opportunities, developing proposals, and finding collaborators.
@@ -54,9 +52,7 @@ Feel free to reach out to the [Office of Research Development](https://www.jmu.e
 
 # grants <- read_csv("data/coe_2025_grants.csv")
 
-googlesheets4::gs4_auth(email = TRUE) 
-
-grants <- googlesheets4::read_sheet(params$url) |>
+grants <- readxl::read_xlsx(params$xlsx) |>
   select(program, funder, url, deadline, amount, synopsis, notes, program_id, discipline) |>
   filter(program_id %in% c(params$program_ids)) 
 
@@ -66,7 +62,6 @@ grants <- googlesheets4::read_sheet(params$url) |>
 
 
 ```
-
 
 ```{r}
 # ── Typst-safe helpers ────────────────────────────────────────────────────────
@@ -147,7 +142,6 @@ grants_table <- function(df, purple_links = FALSE) {
 }
 ```
 
-
 ```{r}
 #| label: current-filter
 
@@ -185,17 +179,19 @@ grants_past <- grants |>
 # Pass purple_links = TRUE to render the Program column in JMU purple
 # instead of the default red. Requires #plink() defined in jmu.typ.
 
-grants_past <- grants |>
-  mutate(deadline = map_chr(deadline, ~ifelse(is.null(.x), "Rolling", .x))) |>
-  mutate(deadline_parsed = mdy(deadline)) |>
-  filter(deadline_parsed <= as.Date(params$date_cutoff)) |>
-  arrange(deadline_parsed) |>
-  select(-deadline_parsed)
+if (nrow(grants_past) == 0) {
+  tt(
+    tibble::tibble(` ` = "No other grants to monitor at this time."),
+    escape = FALSE,
+    width = 1
+  )
+} else {
+  grants_table(grants_past, purple_links = FALSE)
+}
 ```
 
 # Contact
 
 Office of Research Development
 
-**Email:** [researchdevelopment@jmu.edu](mailto:researchdevelopment@jmu.edu)
-
+**Email:** [researchdevelopment\@jmu.edu](mailto:researchdevelopment@jmu.edu)
